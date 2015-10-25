@@ -18,6 +18,7 @@ import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;  
 import org.opencv.imgproc.Imgproc;  
 import org.opencv.objdetect.CascadeClassifier;  
+import org.opencv.objdetect.Objdetect;
 
 class FacePanel extends JPanel{  
      private static final long serialVersionUID = 1L;  
@@ -138,21 +139,34 @@ class FaceDetector {
           Imgproc.equalizeHist( mGrey1, mGrey1 );  
             
           
-          rect.height = (int) Math.round(rect.height * 0.5);
-          rect.y = rect.y + rect.height;
-          mouthCascade.detectMultiScale(faceROI, mouth, 1.1, 2, 0, new Size(30, 30), new Size());
+       //   rect.height = (int) Math.round(rect.height * 0.5);
+       //   rect.y = rect.y + rect.height;
+          //mJavaDetectorMouth.detectMultiScale(faceROI, mouths,1.1, 2,
+      //    Objdetect.CASCADE_FIND_BIGGEST_OBJECT
+      //    | Objdetect.CASCADE_SCALE_IMAGE, new org.opencv.core.Size(30, 30), new org.opencv.core.Size());
+
+          mouthCascade.detectMultiScale(faceROI, mouth, 1.1, 2, Objdetect.CASCADE_FIND_BIGGEST_OBJECT  | Objdetect.CASCADE_SCALE_IMAGE, new Size(30, 30), new Size());
        //   mouthCascade.detectMultiScale(faceROI, mouth, 1.1, 2, 0, new Size(30, 30), new Size());
-          System.out.println(String.format("Detected %s mouth", mouth.toArray().length));
+         
           Rect[] mouthArray = mouth.toArray();
          
-     
+     /* Point center1 = new Point(facesArray[i].x + mouthArray[j].x + mouthArray[j].width * 0.5,
+                        facesArray[i].y + mouthArray[j].y + mouthArray[j].height * 0.5);
+                int radius = (int) Math.round(mouthArray[j].width / 2);
+                Imgproc.circle(mRgba, center1, radius, new Scalar(255, 0, 0), 4, 8, 0);
+            }
+      * 
+      * 
+      * 
+      */
           for (Rect mouth1:mouth.toArray()) {
-        	 
-        		  Point centre3 = new Point(rect.x + mouth1.x + mouth1.width ,
-        		                    rect.y + mouth1.y + mouth1.height);
-        		          Core.ellipse(mRgba, centre3, new Size(mouth1.width * 0.5,mouth1.height * 0.5), 0, 0, 360,new Scalar(255, 112,43), 4, 8, 0);
-				
-				
+        	  System.out.println(String.format("Detected %s mouth", mouth.toArray().length));
+        		  Point center13 = new Point(rect.x + mouth1.x + mouth1.width *0.5,
+        		                    rect.y + mouth1.y + mouth1.height*0.5);
+        		  //        Core.ellipse(mRgba, centre3, new Size(mouth1.width * 0.5,mouth1.height * 0.5), 0, 0, 360,new Scalar(255, 112,43), 4, 8, 0);
+        		  int radius = (int) Math.round(mouth1.width / 2);
+                 // Imgproc.circle(mRgba, centre3, radius,4, 8, 0, new Scalar(255, 0, 0) );
+        		  Core.circle(mRgba, center13, radius, new Scalar(255, 0, 0), 4, 8, 0);
           }
           
               }  
